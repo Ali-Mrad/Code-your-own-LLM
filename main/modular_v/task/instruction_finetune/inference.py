@@ -16,7 +16,7 @@ def generate_response(
     device: str = "cpu",
 ):
     prompt = format_input({"instruction": instruction, "input": input_text})
-    idx    = text_to_token_ids(prompt, tok).to(device)         # helper ✨
+    idx    = text_to_token_ids(prompt, tok).to(device)         
     out_ids = generate(
         model,
         idx,
@@ -25,5 +25,5 @@ def generate_response(
         temperature=temperature,
         top_k=top_k,
     )
-    full_text = token_ids_to_text(out_ids, tok)                # helper ✨
+    full_text = token_ids_to_text(out_ids, tok)                
     return full_text.split("### Response:\n")[-1].strip()
