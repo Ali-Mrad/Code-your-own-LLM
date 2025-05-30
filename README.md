@@ -362,7 +362,7 @@ france is known for its beauty.
 
 #### Key component of the Supervised Fine-Tuning 
 
-| Component | What we did (and why) |
+| Component | What we did and why |
 |-----------|----------------------|
 | **Prompt template** | Implemented in `format_input()` – keeps Sebastian Raschka’s style but adds an explicit *double line-break* before the assistant section. Guarantees identical offsets across the batch. |
 | **Dynamic batch builder** | `custom_collate_fn` pads to *the longest sample of the current batch* and masks every token before `### Response:` with `ignore_index (-100)`. No wasted compute on instructions . |
