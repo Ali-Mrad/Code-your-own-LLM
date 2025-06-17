@@ -136,12 +136,13 @@ this is hiw to call the high-level script, how the weights.py utilities abstract
 
 
 ```bash 
-python modular_v/scripts/generate_text.py \
-       --size small \
-       --prompt "Every effort moves you" \
-       --tokens 60 \
-       --temperature 0.8 \
-       --top_k 5
+PYTHONPATH=. python scripts/generate_text.py \
+  --size small \
+  --prompt "Every effort moves you" \
+  --tokens 60 \
+  --temperature 0.8 \
+  --top_k 5
+
 ```
 
 ```
