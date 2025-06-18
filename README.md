@@ -58,7 +58,8 @@ main/                                         #cointains ch02–ch07 on Jupyter 
 │           │    ├── generation.py            # Generates text tokens autoregressively from context                        
 │           │    ├── layernorm.py             # Applies learnable normalization over embedding dimension
 │           │    ├── transformer_block.py     # Transformer block architecture
-│           │    ├── weights.py               # Download and load GPT-2 weights into our model 
+│           │    ├── weights.py               # Download and load GPT-2 weights into our model
+│           │    ├── load_from_safetensors    # Download and load GPT-2 weights into our model
 │           │    ├── model.py                 # GPT-2 model architecture
 │           │    └── train.py                 # Basic training loop and helper functions
 │           │
@@ -139,15 +140,17 @@ this is hiw to call the high-level script, how the weights.py utilities abstract
 PYTHONPATH=. python scripts/generate_text.py \
   --size small \
   --prompt "Every effort moves you" \
-  --tokens 60 \
-  --temperature 0.8 \
-  --top_k 5
+  --tokens 25 \
+  --temperature 1.5 \
+  --top_k 50
 
 ```
 
 ```
 output: 
-toward finding an ideal new way to practice something! What makes us want to be on top of that?
+ Every effort moves you toward finding an ideal new way to practice something!
+
+What makes us want to be on top of that?
 ```
 
 ---
