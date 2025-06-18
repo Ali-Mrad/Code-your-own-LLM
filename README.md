@@ -223,27 +223,19 @@ You’ll see a confusion-free test accuracy plus two demo predictions printed to
 
 
 
-If you want to test or use another text to be classified you should :
+If you want to test or use another text to be classified you should run this command:
 
-```python
+``` python
 PYTHONPATH=. python task/spam_classification/classify_from_prompt.py
 ""
 ```
-output: 
- spam
+Intereaction example :
+Enter your message (or type 'exit' to quit):
+> your the winner of our lottery! send us your credit card details to claim your prize and win 3000 dollars in cash
+Output: 
+Classification: spam
 ```
 
-```python
-text_2 = "Hey, just wanted to check if we're still on for dinner tonight? Let me know!"
-label = classify_review(text_2, model, tokenizer, device, max_length=train_dataset.max_length)
-print(label) 
-```
-
-
-```
-output: 
- not spam
-```
 ---
 
 ## Pipeline ② – Instruction Fine-Tune
