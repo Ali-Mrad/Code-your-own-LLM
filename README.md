@@ -94,6 +94,7 @@ main/                                         #cointains ch02–ch07 on Jupyter 
 │               │   ├── inference.py
 │               │   ├── model_setup.py
 │               │   ├── run_classification_model.py
+│               │   ├── classify_from_prompt.py # Run for interactive spam classifier
 │               │   └── training.py
 │               │
 │               └── instruction_finetune/   # pipeline GPT for instruction
@@ -222,19 +223,11 @@ You’ll see a confusion-free test accuracy plus two demo predictions printed to
 
 
 
-If we want to test or use another text to be classified we should :
+If you want to test or use another text to be classified you should :
 
 ```python
-from main.modular_v.task.spam_classification.inference import classify_review
-
-# here we assume that we are using `model`, `tokenizer`, and `device` that are already loaded
-
-text = "your the winner of our lottery! send us your credit card details to claim your prize and win 3000 dollars in cash""
-label = classify_review(text, model, tokenizer, device, max_length=train_dataset.max_length)
-print(label) 
-
-
-
+PYTHONPATH=. python task/spam_classification/classify_from_prompt.py
+""
 ```
 output: 
  spam
