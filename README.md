@@ -211,7 +211,7 @@ Classic “hello-world” for NLP classification: decide whether an SMS is spam 
 
   → Returns `"spam"` or `"not spam"` in a single line 
 
-In order to run use this command once your in the folder modular_v
+In order to run use this command once you are in the folder modular_v :
 
 ```bash 
 modular_v % PYTHONPATH=. python task/spam_classification/run_classification_model.py
@@ -253,7 +253,7 @@ Classification: spam
   ...
   ### Response:
   ...
-  ```
+  
 
 
 #### 2. Dataloader (`task/instruction_finetune/dataloader.py`)
@@ -261,7 +261,7 @@ Classification: spam
 - Custom `custom_collate_fn`:
   - Pads all samples in a batch to the length of the longest
   - Shifts targets by +1 for next-token prediction
-  - Masks all non-response tokens using `ignore_index` — loss is only computed on the response
+ - Masks all non-response tokens using `ignore_index` — loss is only computed on the response
 - `create_dataloaders(...)` returns `train`, `val`, and `test` loaders with dynamic batch-level padding
 
 
