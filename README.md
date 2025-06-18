@@ -211,11 +211,10 @@ Classic “hello-world” for NLP classification: decide whether an SMS is spam 
 
   → Returns `"spam"` or `"not spam"` in a single line 
 
+In order to run use this command once your in the folder modular_v
 
 ```bash 
-python -m modular_v.task.spam_classification.run_classification_model \
-       --load modular_v/models/review_classifier.pth \
-       --epochs 2
+modular_v % PYTHONPATH=. python task/spam_classification/run_classification_model.py
 
 ```
 
