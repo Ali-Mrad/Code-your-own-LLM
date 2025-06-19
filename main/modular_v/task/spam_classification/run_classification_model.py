@@ -11,7 +11,7 @@ from task.spam_classification.inference  import classify_review
 MODEL_SAVE_PATH      = Path("models/review_classifier.pth")
 LOAD_EXISTING_MODEL  = True        # change to False to retrain the model
 BATCH_SIZE           = 8
-NUM_EPOCHS           = 2
+NUM_EPOCHS           = 5
 EVAL_FREQ            = 50         
 EVAL_ITER            = 5          
 
@@ -25,7 +25,7 @@ print("Device:", device)
 prepare_dataset("data/sms_spam")
 tok = tiktoken.get_encoding("gpt2")
 train_loader, val_loader, test_loader, max_len = get_dataloaders(
-    tok, data_root="data/sms_spam", batch_size=BATCH_SIZE, device=device
+    tok, data_root="data/sms_spam", batch_size=BATCH_SIZE
 )
 
 # model
@@ -58,6 +58,6 @@ test_acc = calc_accuracy_loader(test_loader, model, device)
 print(f"\nTest accuracy: {test_acc*100:.2f}%")
 
 print("\nClassifying a sample review:\n")
-print(classify_review("your the winner of our lottery! send us your credit card details to claim your prize and win 3000 dollars in cash", model, tok, device,max_len))
+print(classify_review("yy", model, tok, device,max_len))
 print(classify_review("Hey, just wanted to check if we're still on for dinner tonight? Let me know!", model, tok, device,max_len))
 

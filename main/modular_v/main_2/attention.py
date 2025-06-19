@@ -34,8 +34,8 @@ class MultiHeadAttention(nn.Module):
 
         # reshape to (B, n_heads, L, head_dim)
         q = q.view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
-        k = k.view_as(B, L, self.num_heads, self.head_dim).transpose(1, 2)
-        v = v.view_as(B, L, self.num_heads, self.head_dim).transpose(1, 2)
+        k = k.view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
+        v = v.view(B, L, self.num_heads, self.head_dim).transpose(1, 2)
 
         # Original mask truncated to the number of tokens and converted to boolean
         mask_bool = self.mask.bool()[:L, :L]

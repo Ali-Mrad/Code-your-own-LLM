@@ -3,6 +3,7 @@ import torch, tiktoken
 from main_2.generation import generate
 from .data import format_input
 from main_2.train import text_to_token_ids, token_ids_to_text
+from main_2.config  import get_config
 
 tok = tiktoken.get_encoding("gpt2")
 

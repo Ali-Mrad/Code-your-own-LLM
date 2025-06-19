@@ -1,4 +1,5 @@
 import urllib.request, os, pathlib, torch
+from safetensors.torch import load_file
 
 HF_BASE = "https://huggingface.co/rasbt/gpt2-from-scratch-pytorch/resolve/main/"
 
@@ -37,9 +38,9 @@ def load_into(
     model,
     weight_path: str | os.PathLike,
     device: str = "cpu",
-    strict: bool = False,
+    strict: bool = True,
 ):
    
     state = torch.load(weight_path, map_location=device, weights_only=True)
-    model.load_state_dict(state, strict=strict)
+    model.load_state_dict(state, strict=True)
     return model

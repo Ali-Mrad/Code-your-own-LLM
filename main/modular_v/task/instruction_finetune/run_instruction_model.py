@@ -12,8 +12,8 @@ from main_2.train    import text_to_token_ids, token_ids_to_text
 
 FILE_PATH           = "data/instruction-data.json"
 URL                 = "https://raw.githubusercontent.com/rasbt/LLMs-from-scratch/main/ch07/01_main-chapter-code/instruction-data.json"
-MODEL_SAVE_PATH     = Path("models/gpt2-medium355M-sft.pth")
-LOAD_EXISTING_MODEL = True        # False train the model again
+MODEL_SAVE_PATH     = Path("models/gpt2-small124M-sft.pth")
+LOAD_EXISTING_MODEL = False     # False train the model again
 GENERATE_FULL_TEST_SET = False  # True to generate responses for the full test set
 BATCH_SIZE          = 8
 NUM_EPOCHS          = 2
@@ -33,7 +33,7 @@ train_loader, val_loader, test_loader = create_dataloaders(
 )
 
 # model
-model = build_sft_model(MODEL_SAVE_PATH, model_size="medium", device=device)
+model = build_sft_model(MODEL_SAVE_PATH, model_size="small", device=device)
 optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5, weight_decay=0.1)
 
 if LOAD_EXISTING_MODEL and MODEL_SAVE_PATH.exists():

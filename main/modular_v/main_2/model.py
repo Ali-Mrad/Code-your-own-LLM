@@ -7,6 +7,7 @@ from main_2.layernorm import LayerNorm
 class GPTModel(nn.Module):
     def __init__(self, cfg): # cfg is a dictionary containing the model configuration
         super().__init__()
+        self.cfg = cfg  # Store the configuration for later use
         self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg["emb_dim"]) # words to embeddings which is vector representation that is trainable 
         self.pos_emb = nn.Embedding(cfg["context_length"], cfg["emb_dim"])
         self.drop_emb = nn.Dropout(cfg["drop_rate"])

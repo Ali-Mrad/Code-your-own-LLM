@@ -1,7 +1,8 @@
 import torch.nn as nn
 from main_2.config  import get_config
 from main_2.model   import GPTModel
-from main_2.weights import download_weights, load_into
+#from main_2.weights import download_weights, load_into
+from main_2.load_from_safetensors import download_weights,load_weights_into_gpt
 
 
 def build_spam_model_simple(
@@ -21,7 +22,7 @@ def build_spam_model_simple(
 
     
     ckpt = checkpoint or download_weights(model_size)
-    load_into(model, ckpt, device=device, strict=False)
+    load_weights_into_gpt(model, ckpt) 
 
     model.eval()
     for p in model.parameters():
@@ -29,7 +30,7 @@ def build_spam_model_simple(
 
     model.out_head = nn.Linear(cfg["emb_dim"], 2)
 
-    for p in model.blocks[-1].parameters():
+    for p in model.trf_blocks[-1].parameters():
         p.requires_grad = True
     for p in model.final_norm.parameters():
         p.requires_grad = True

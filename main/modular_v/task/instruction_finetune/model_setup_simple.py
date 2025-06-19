@@ -1,6 +1,8 @@
 from main_2.config  import get_config
 from main_2.model   import GPTModel
-from main_2.weights import load_into
+from main_2.load_from_safetensors import download_weights, load_weights_into_gpt
+import torch
+from pathlib import Path
 
 
 def build_sft_model(ckpt_path: str, model_size="small", device="cpu"):
@@ -9,7 +11,12 @@ def build_sft_model(ckpt_path: str, model_size="small", device="cpu"):
     cfg = get_config(cfg_name)
     model = GPTModel(cfg).to(device)
 
-    load_into(model, ckpt_path, device=device, strict=False)
+    state_dict = download_weights(model_size)
+    load_weights_into_gpt(model, state_dict)
+
+    if ckpt_path and Path(ckpt_path).exists():
+        print(f"Loading fine-tuned model from {ckpt_path}")
+        model.load_state_dict(torch.load(ckpt_path, map_location=device), strict=False)
 
     model.eval()
     return model

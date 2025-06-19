@@ -1,9 +1,11 @@
 import argparse, sys, torch, tiktoken, pathlib
 from main_2.config     import get_config
 from main_2.model      import GPTModel
-from main_2.weights    import download_weights, load_into
+#from main_2.weights    import download_weights, load_into
+from main_2.load_from_safetensors import download_weights, load_weights_into_gpt
 from main_2.generation import generate
 from main_2.train      import text_to_token_ids, token_ids_to_text
+#from notebook.previous_chapters import text_to_token_ids, token_ids_to_text ,GPTModel
 
 def parse_args():
     p = argparse.ArgumentParser()
@@ -29,10 +31,11 @@ def main():
     cfg       = get_config(cfg_name)
     tokenizer = tiktoken.get_encoding("gpt2")
 
-    ckpt = pathlib.Path(args.ckpt) if args.ckpt else download_weights(args.size)
     model = GPTModel(cfg).to(args.device)
-    load_into(model, ckpt, device=args.device, strict=False)
+    state_dict = download_weights(args.size)  # Télécharge ou utilise les safetensors
+    load_weights_into_gpt(model, state_dict)  # Assigne manuellement dans le modèle
     model.eval()
+    torch.manual_seed(123)
 
     prompt = args.prompt or input("Enter prompt: ")
     idx    = text_to_token_ids(prompt, tokenizer).to(args.device)
