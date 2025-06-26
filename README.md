@@ -61,7 +61,7 @@ main/                                         #cointains ch02–ch07 on Jupyter 
 │           │    ├── layernorm.py             # Applies learnable normalization over embedding dimension
 │           │    ├── transformer_block.py     # Transformer block architecture
 │           │    ├── weights.py               # Download and load GPT-2 weights into our model
-│           │    ├── load_from_safetensors    # Download and load GPT-2 weights into our model
+│           │    ├── load_from_safetensors.py # Download and load GPT-2 weights into our model
 │           │    ├── model.py                 # GPT-2 model architecture
 │           │    └── train.py                 # Basic training loop and helper functions
 │           │
@@ -142,9 +142,9 @@ No TensorFlow required we use PyTorch checkpoints only.
 
 
 A five-line command that proves the library works end-to-end: it downloads the official GPT-2 checkpoints, rebuilds the architecture from our own source code, moves the model to your GPU / CPU, and finally generates text with temperature & top-k sampling.
-this is hiw to call the high-level script, how the weights.py utilities abstract download + loading, and how to adjust sampling hyper-parameters without touching any internals.
+this is how to call the high-level script, how the weights.py and load_from_safetensors.py utilities abstract download + loading, and how to adjust sampling hyper-parameters without touching any internals.
 
-
+Use this command once you are in the modular_v folder:
 ```bash 
 PYTHONPATH=. python scripts/generate_text.py \
   --size small \
@@ -242,7 +242,7 @@ Enter your message (or type 'exit' to quit):
 Output: 
 Classification: spam
 ```
-
+```
 ---
 
 ## Pipeline ② – Instruction Fine-Tune
@@ -303,7 +303,7 @@ You can run it that way :
 
 
 ```bash 
-python -m modular_v.task.instruction_finetune.run_instruction_model \
+python -m modular_v/task.instruction_finetune/run_instruction_model \
        --ckpt models/gpt2-medium355M-sft.pth \
        --epochs 0 \
        --ask "Summarise the rules of chess in bullet-points."
@@ -355,6 +355,8 @@ Model response:
 >> beauty.
 france is known for its beauty.
 ```
+
+Lastly 
 
 #### Key component of the Supervised Fine-Tuning 
 
