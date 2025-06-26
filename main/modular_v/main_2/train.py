@@ -42,7 +42,7 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
     return train_loss, val_loss
 
 
-#ENC = tk.get_encoding("gpt2")
+
 tokenizer = tk.get_encoding("gpt2")
 
 def text_to_token_ids(text,tokenizer):

@@ -5,7 +5,7 @@ import torch
 from pathlib import Path
 
 
-def build_sft_model(ckpt_path: str, model_size="small", device="cpu"):
+def build_sft_model(ckpt_path: str, model_size, device="cpu"):
     cfg_name = {"small":"gpt2-small (124M)", "medium":"gpt2-medium (355M)",
                 "large":"gpt2-large (774M)", "xl":"gpt2-xl (1558M)"}[model_size]
     cfg = get_config(cfg_name)

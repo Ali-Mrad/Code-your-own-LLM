@@ -24,20 +24,16 @@ The outcome is a folder **(`modular_v/`)** cointaining ready-to-run scripts and 
 
 ---
 
-
-
-
-
 ## Table of Contents
 
 1. [Repository Layout](#repository-layout)
-2. [Setup](#setup)
-3. [Introduction](#introduction)
+2. [Introduction](#introduction)
+3. [Setup](#setup)
 4. [Core Model Quick Demo](#core-model-quick-demo)
 5. [Pipeline ① – Spam Classifier](#pipeline-①--sms-spam-classifier)
 6. [Pipeline ② – Instruction Fine-Tune](#pipeline-②--instruction-sft)
 7. [Chapter Notebooks](#chapter-notebooks)
-8. [Results and conclusion](#results)
+8. [Results and Conclusion](#Results-and-conclusion)
 9. [Credits](#Credits)
 
 
@@ -111,7 +107,65 @@ main/                                         #cointains ch02–ch07 on Jupyter 
 │
 ...
 
+---
 ```
+## Introduction
+### Structure of a GPT-Style LLM
+
+A large-language model is a giant next-token predictor: it looks at a sequence of tokens, estimates the most likely continuation, appends that token, and repeats.  
+GPT-type models implement this loop with a **decoder-only Transformer**—a stack of identical blocks that combine self-attention and feed-forward layers.  
+The **`modular_v/`** directory recreates each of those blocks from scratch so every mechanism is visible.
+
+### 1 · Tokenisation  
+
+Everything starts in **`main_2/data.py`**.  
+Raw text is segmented with GPT-2’s Byte-Pair Encoding  via **tiktoken**, turning characters into sub-word tokens and finally into integer IDs.  
+A sliding-window dataset plus a PyTorch `DataLoader` pad sequences, giving the model neat, equally-sized batches.
+
+### 2 · Embeddings  
+
+Inside **`main_2/model.py`**, two learnable tables convert integers to vectors.  
+A **token embedding** gives each symbol a dense representation; a **positional embedding** adds the notion of order so the network distinguishes “cat sat on” from “on sat cat” for example.
+
+### 3 · The Transformer Decoder Block  
+
+The “thinking cell” of GPT-2 is defined in **`transformer_block.py`**.  
+Each block begins with *causal multi-head self-attention* coming from **`attention.py`**.  Self-attention lets every word in the prompt look back at all the words that came before it and ask, *“Which of you matter most for my meaning?”*  The model does this comparison in parallel across several **heads**; one head might focus on subject–verb agreement, another on long-range name references, another on punctuation cues.  Because we apply a **causal mask**, a token can never peek at the future generation stays strictly left to right.
+
+These attention scores create weighted mixtures of earlier hidden states, so each token leaves the layer carrying a fresh, context representation that literally “knows more” about its neighbours than when it entered.
+
+The enriched vectors then flow through a two-layer **GELU-activated feed-forward network** from **`feedforward.py`**.  While attention blends information *across* positions, the feed-forward step lets the model transform that information *within* each position, adding non linear twists, the linear attention could not capture on its own.
+
+Two design tricks keep the whole process trainable:  
+
+* **Residual shortcuts** add the layer’s input back to its output, so gradients can flow unimpeded through very deep stacks.  
+* **Layer Normalisation** (see **`layernorm.py`**) stabilises activations before every sublayer.
+
+Stack a dozen of these blocks and you obtain a decoder that can model dependencies ranging from adjacent words up to entire paragraphs, all learned end to end from the next token objective.
+
+
+### 4 · Language Model Head & Loss  
+
+After a stack of such blocks, the model applies a single linear projection (still in **`model.py`**) to map hidden states back to vocabulary logits.  
+During training, **`train.py`** computes cross entropy loss between those logits and the true next token; at inference time **`generation.py`** samples with temperature and top-k/top-p tricks to generate text.
+
+### 5 · Practical Utilities  
+
+* **Weight loading** – **`main_2/load_from_safetensors.py`** fetches and injects official GPT-2 checkpoints (Small → XL) so you can start from proven weights rather than random noise.  
+* **Training loop** – The same **`train.py`** file handles batching, optimiser setup, gradient , checkpointing and basic logging—no external trainer needed.
+
+### 6 · Extending the Skeleton  
+
+Because the core is fully modular, downstream tasks live under **`task/`**:  
+
+* **Spam classification** attaches a two-unit linear head to the last hidden state.  
+* **Instruction following** reuses the standard LM head but masks the loss so only the response part is optimised.  
+
+Every runner script accepts `--size {small|medium|large|xl}` and `--ckpt <path>`.  
+The default is **small** for laptop-friendly demos, but switching to a larger checkpoint is possible.
+
+With these components in place you have the entire GPT-2 engine—tokeniser to generator, ready for inspection, fine-tuning, or even new experiments.
+
 ---
 
 ## Setup
@@ -128,13 +182,9 @@ pip install -r requirements.txt
 ```
 
 Requirements.txt contains: torch, tiktoken, numpy, pandas, matplotlib ...
-No TensorFlow required we use PyTorch checkpoints only.
+No TensorFlow required only PyTorch checkpoints are used.
 
 ---
-
-## Introduction
-
-
 
 
 ## Core Model Quick Demo
@@ -222,27 +272,25 @@ Classic “hello-world” for NLP classification: decide whether an SMS is spam 
 In order to run use this command once you are in the folder modular_v :
 
 ```bash 
-modular_v % PYTHONPATH=. python task/spam_classification/run_classification_model.py
+ PYTHONPATH=. python task/spam_classification/run_classification_model.py
 
 ```
 
 You’ll see a confusion-free test accuracy plus two demo predictions printed to the console.
 
 
+To classify your own custom message, run:
 
-If you want to test or use another text to be classified you should run this command:
-
-``` python
+``` bash
 PYTHONPATH=. python task/spam_classification/classify_from_prompt.py
-""
+
 ```
-Intereaction example :
+Interaction example :
 Enter your message (or type 'exit' to quit):
 > your the winner of our lottery! send us your credit card details to claim your prize and win 3000 dollars in cash
 Output: 
 Classification: spam
-```
-```
+
 ---
 
 ## Pipeline ② – Instruction Fine-Tune
@@ -263,7 +311,6 @@ Classification: spam
   ...
   
 
-
 #### 2. Dataloader (`task/instruction_finetune/dataloader.py`)
 - `InstructionDataset` encodes each `[prompt + expected response]` as a single contiguous sequence of token IDs
 - Custom `custom_collate_fn`:
@@ -275,7 +322,7 @@ Classification: spam
 
 #### 3. Model Setup (`task/instruction_finetune/model_setup_simple.py`)
 - Initializes from the GPT-2 “medium” (355M parameters) backbone
-- Optionally loads a checkpoint with `load_into(...)`
+- Optionally loads a checkpoint with `load_weights_into_gpt(...)`
 - Retains the standard language modeling head (predicting next-token probabilities)
 - Exposes `build_sft_model(ckpt_path, model_size="medium", device=...)` for training-ready setup
 
@@ -286,7 +333,6 @@ Classification: spam
   - Uses AdamW optimizer with learning rate = **5e-5**
   - Trains for **2 epochs** by default — enough to demonstrate alignment without heavy GPU needs
   - Prints sample generations after each epoch
-
 
 #### 5. Generation & Evaluation
 
@@ -356,8 +402,16 @@ Model response:
 france is known for its beauty.
 ```
 
-Lastly 
+Lastly, you can run the interactive file `generate_from_instruction.py` to engage in interactive communication with the model.
 
+Note:
+The model must be trained beforehand. By default, the `small` version is used.
+To get more coherent and higher-quality responses, you should train the GPT-2 `medium` model and manually update the "MODEL_SAVE_PATH" in the `generate_from_instruction.py` file accordingly.
+
+
+```bash
+% PYTHONPATH=. python task/instruction_finetune/generate_from_instruction.py
+```
 #### Key component of the Supervised Fine-Tuning 
 
 | Component | What we did and why |
