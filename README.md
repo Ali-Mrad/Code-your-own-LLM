@@ -32,12 +32,14 @@ The outcome is a folder **(`modular_v/`)** cointaining ready-to-run scripts and 
 
 1. [Repository Layout](#repository-layout)
 2. [Setup](#setup)
-3. [Core Model Quick Demo](#core-model-quick-demo)
-4. [Pipeline ① – Spam Classifier](#pipeline-①--sms-spam-classifier)
-5. [Pipeline ② – Instruction Fine-Tune](#pipeline-②--instruction-sft)
-6. [Chapter Notebooks](#chapter-notebooks)
-7. [Results and conclusion](#results)
-8. [Credits](#Credits)
+3. [Introduction](#introduction)
+4. [Core Model Quick Demo](#core-model-quick-demo)
+5. [Pipeline ① – Spam Classifier](#pipeline-①--sms-spam-classifier)
+6. [Pipeline ② – Instruction Fine-Tune](#pipeline-②--instruction-sft)
+7. [Chapter Notebooks](#chapter-notebooks)
+8. [Results and conclusion](#results)
+9. [Credits](#Credits)
+
 
 
 ---
@@ -129,6 +131,12 @@ Requirements.txt contains: torch, tiktoken, numpy, pandas, matplotlib ...
 No TensorFlow required we use PyTorch checkpoints only.
 
 ---
+
+## Introduction
+
+
+
+
 ## Core Model Quick Demo
 
 
