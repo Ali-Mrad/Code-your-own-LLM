@@ -393,17 +393,6 @@ Model response:
 
 Note that some instruction takes much more time to produce an answer, this is directly due to the complexity of the request, a simpler instruction lead to a fast answer
 
-```
-### Instruction:
- finish the sentence
-
-### Input:
-france is well known for its
-
-Model response:
->> beauty.
-france is known for its beauty.
-```
 
 
 #### Key component of the Supervised Fine-Tuning 
