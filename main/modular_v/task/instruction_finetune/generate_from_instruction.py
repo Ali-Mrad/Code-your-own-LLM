@@ -7,13 +7,13 @@ from main_2.load_from_safetensors import load_weights_into_gpt, download_weights
 from task.instruction_finetune.inference import generate_response
 
 
-MODEL_SAVE_PATH = Path("models/gpt2-small124M-sft.pth")
+MODEL_SAVE_PATH = Path("models/gpt2-medium355M-sft.pth")
 
 def load_instruction_model(device="cpu"):
-    cfg = get_config("gpt2-small (124M)") # or "gpt2-small (124M)", "gpt2-large (774M)", "gpt2-xl (1558M)",  "gpt2-medium (355M)"
+    cfg = get_config("gpt2-medium (355M)") # or "gpt2-small (124M)", "gpt2-large (774M)", "gpt2-xl (1558M)",  "gpt2-medium (355M)"
     model = GPTModel(cfg).to(device)
 
-    weights_path = download_weights("small") # medium
+    weights_path = download_weights("medium") # medium
     load_weights_into_gpt(model, weights_path)
 
     
