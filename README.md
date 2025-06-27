@@ -344,21 +344,24 @@ Classification: spam
   Using the `--gen_test_set` CLI flag generates `instruction-data-with-response.json`.  
   `Note :` it Can be evaluated with `ollama_evaluation.py` against an external LLM to get a 0–100 alignment score. Not present here due to implementation and memory problems
 
+you can run the interactive file `generate_from_instruction.py` to engage in interactive communication with the model.
 
-You can run it that way :
+Note:
+The model must be trained beforehand. By default, the `small` version is used.
+To get more coherent and higher-quality responses, you should train the GPT-2 `medium` model and manually update the "MODEL_SAVE_PATH" in the `generate_from_instruction.py` file accordingly.
 
 
-```bash 
-PYTHONPATH=. python task/instruction_finetune/run_instruction_model.py
-       --ckpt models/gpt2-medium355M-sft.pth \
-       --epochs 0 \
-       --ask "Summarise the rules of chess in bullet-points."
+```bash
+% PYTHONPATH=. python task/instruction_finetune/generate_from_instruction.py
+```
 
+```bash
+ask: Summarise the rules of chess in bullet-points.
 
 ```
-output: 
-Model response:
-Input:
+```
+Model reponse :
+
 The game is played by placing the pieces on the board.
 
 
@@ -367,7 +370,7 @@ The rules of chess are:
 2. The queen must be on the opposite side of the board.
 3. The rook must be on the first square.
 4. The king must be on the square with the largest number of pieces.
-
+```
 
 Another example :
 
@@ -402,16 +405,7 @@ Model response:
 france is known for its beauty.
 ```
 
-Lastly, you can run the interactive file `generate_from_instruction.py` to engage in interactive communication with the model.
 
-Note:
-The model must be trained beforehand. By default, the `small` version is used.
-To get more coherent and higher-quality responses, you should train the GPT-2 `medium` model and manually update the "MODEL_SAVE_PATH" in the `generate_from_instruction.py` file accordingly.
-
-
-```bash
-% PYTHONPATH=. python task/instruction_finetune/generate_from_instruction.py
-```
 #### Key component of the Supervised Fine-Tuning 
 
 | Component | What we did and why |
