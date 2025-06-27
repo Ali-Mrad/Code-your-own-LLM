@@ -27,4 +27,4 @@ def generate_response(
         top_k=top_k,
     )
     full_text = token_ids_to_text(out_ids, tok)                
-    return full_text.split("### Response:\n")[-1].strip()
+    return full_text.split("### Response:\n")[-1].split("<|endoftext|>")[0].strip()
