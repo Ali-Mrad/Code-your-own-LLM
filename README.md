@@ -349,7 +349,7 @@ You can run it that way :
 
 
 ```bash 
-python -m modular_v/task.instruction_finetune/run_instruction_model \
+PYTHONPATH=. python task/instruction_finetune/run_instruction_model.py
        --ckpt models/gpt2-medium355M-sft.pth \
        --epochs 0 \
        --ask "Summarise the rules of chess in bullet-points."
